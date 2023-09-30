@@ -1,5 +1,6 @@
 import { Application, Router } from "https://deno.land/x/oak@v10.4.0/mod.ts";
 import { parse } from "https://deno.land/std@0.99.0/flags/mod.ts";
+import users from "./users.ts";
 
 const app = new Application();
 const { args } = Deno;
@@ -11,7 +12,7 @@ const router = new Router();
 
 router.get("/", (context) => {
   context.response.type = "application/json";
-  context.response.body = { data: "This API is under construction" };
+  context.response.body = { users };
 });
 
 app.addEventListener("error", (event) => {
