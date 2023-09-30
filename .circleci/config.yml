@@ -12,7 +12,7 @@ jobs:
       - checkout
       - run:
           name: "Setup custom environment variables"
-          command: echo 'export HEROKU_APP_NAME="deno-heroku-circleci"' >> "$BASH_ENV"
+          command: echo 'export HEROKU_APP_NAME="deno-heroku-circleci-052519daac1a"' >> "$BASH_ENV"
       - run: |
           deno test --allow-net server.test.ts
           echo $HEROKU_APP_NAME
