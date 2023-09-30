@@ -13,7 +13,12 @@ jobs:
       - run: |
           deno test --allow-net server.test.ts
           echo $HEROKU_APP_NAME
-
+      - run:
+          name: "What branch am I on now?"
+          command: echo $CIRCLE_BRANCH
+      - run:
+          name: "Print an env var stored in the Project"
+          command: echo ${HEROKU_APP_NAME}
 workflows:
   sample:
     jobs:
