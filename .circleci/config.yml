@@ -1,32 +1,31 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
 version: 2.1
 
-orbs:
-  heroku: circleci/heroku@2.0.0
-
 jobs:
-  build-and-test:
+  build:
     docker:
       - image: denoland/deno:1.37.1
     steps:
       - checkout
-      - run:
-          name: "Setup custom environment variables"
-          command: echo 'export HEROKU_APP_NAME="deno-heroku-circleci-052519daac1a"' >> "$BASH_ENV"
       - run: |
           deno test --allow-net server.test.ts
-          echo $HEROKU_APP_NAME
+    # build job ommitted for brevity
+  deploy:
+    docker:
+      - image: cimg/base:2023.09
+    steps:
+      - checkout
       - run:
-          name: "What branch am I on now?"
-          command: echo $CIRCLE_BRANCH
-      - run:
-          name: "Print an env var stored in the Project"
-          command: echo ${HEROKU_APP_NAME}
+          name: Deploy Main to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git main
+
 workflows:
-  sample:
+  build-deploy:
     jobs:
-      - build-and-test
-      - heroku/deploy-via-git:
-          force: true # this parameter instructs the push to use a force flag when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
+      - build
+      - deploy:
           requires:
-            - build-and-test
+            - build # only run deploy-via-git job if the build job has completed
+          filters:
+            branches:
+              only: main # only run deploy-via-git job on main branch
