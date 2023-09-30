@@ -12,6 +12,7 @@ jobs:
       - checkout
       - run: |
           deno test --allow-net server.test.ts
+          echo $HEROKU_APP_NAME
 
 workflows:
   sample:
